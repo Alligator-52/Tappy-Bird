@@ -30,8 +30,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
         PlayerPrefs.SetInt("Score", score);
         highScore = PlayerPrefs.GetInt("HighScore");
-        highScoreText.text = "HighScore: " + highScore.ToString();
-        titleHsText.text = "HighScore: " + highScore.ToString();
+        highScoreText.text = titleHsText.text = "HighScore: " + highScore.ToString();
         gameOverPanel.SetActive(false);
         uiPanel.SetActive(false);
         menuPanel.SetActive(true);
@@ -44,10 +43,10 @@ public class GameManager : MonoBehaviour
         score += 1;
         PlayerPrefs.SetInt("Score", score);
         scoreText.text = score.ToString();
-        if(score >= highScore)
+        if(score > highScore)
         {
             PlayerPrefs.SetInt("HighScore", score);
-            highScore = PlayerPrefs.GetInt("HighScore");
+            highScore = score;
             hsPanel.SetActive(true);
         }
         highScoreText.text = "HighScore: " + highScore.ToString();
