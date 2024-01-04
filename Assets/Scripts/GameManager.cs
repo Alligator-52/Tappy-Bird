@@ -1,6 +1,8 @@
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +22,6 @@ public class GameManager : MonoBehaviour
     [Header("Audio")]
     public AudioSource uiSound;
 
-
     private int score = 0;
     private int highScore = 0;
     private void Start()
@@ -36,7 +37,12 @@ public class GameManager : MonoBehaviour
         menuPanel.SetActive(true);
         screenButtonPanel.SetActive(true);
         hsPanel.SetActive(false);
+        Debug.Log(Application.dataPath);      
 
+        foreach(int highscore in HighScoreHandler.DisplayHighScore())
+        {
+            Debug.Log(highscore.ToString());
+        }
     }
     public void ScoreCounter()
     {
@@ -58,6 +64,7 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 0f;
         gameOverPanel.SetActive(true);
+        HighScoreHandler.AddHighScoreToJSON(highScore);
         goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
        
     }
@@ -76,5 +83,70 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.DeleteKey("HighScore");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         uiSound.Play();
+    }
+}
+
+[System.Serializable]
+public class HighScoresData
+{
+    public List<int> highScores;
+
+    public HighScoresData(List<int> scores)
+    {
+        highScores = scores;
+    }
+}
+
+public static class HighScoreHandler
+{
+    private const string jsonFileName = "Highscores.json";
+    private const int maxHighScores = 10;
+
+    //private static string path = Path.Combine(Application.persistentDataPath, jsonFileName);
+    private static string path = Application.dataPath + "/" + jsonFileName;
+
+    public static void AddHighScoreToJSON(int score)
+    {
+        List<int> highScores = LoadHighScores();
+        highScores.Add(score);
+        highScores.Sort((a, b) => b.CompareTo(a)); // Sort scores in descending order
+
+        if (highScores.Count > maxHighScores)
+        {
+            highScores.RemoveAt(maxHighScores);
+        }
+
+        SaveHighScores(highScores);
+
+        // DisplayHighScores(highScores);
+    }
+
+    private static List<int> LoadHighScores()
+    {
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            HighScoresData highScoresData = JsonUtility.FromJson<HighScoresData>(json);
+
+            if (highScoresData != null)
+            {
+                return highScoresData.highScores;
+            }
+        }
+
+        return new List<int>();
+    }
+
+    private static void SaveHighScores(List<int> highScores)
+    {
+        HighScoresData highScoresData = new HighScoresData(highScores);
+        string json = JsonUtility.ToJson(highScoresData);
+        File.WriteAllText(path, json);
+    }
+
+    public static List<int> DisplayHighScore()
+    {
+        List<int> highscores = LoadHighScores();
+        return highscores;
     }
 }
