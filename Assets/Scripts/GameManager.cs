@@ -108,7 +108,8 @@ public static class HighScoreHandler
     public static void AddHighScoreToJSON(int score)
     {
         List<int> highScores = LoadHighScores();
-        highScores.Add(score);
+        if(!highScores.Contains(score))
+            highScores.Add(score);
         highScores.Sort((a, b) => b.CompareTo(a)); // Sort scores in descending order
 
         if (highScores.Count > maxHighScores)
