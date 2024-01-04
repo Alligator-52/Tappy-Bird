@@ -102,8 +102,8 @@ public static class HighScoreHandler
     private const string jsonFileName = "Highscores.json";
     private const int maxHighScores = 10;
 
-    //private static string path = Path.Combine(Application.persistentDataPath, jsonFileName);
-    private static string path = Application.dataPath + "/" + jsonFileName;
+    private static string path = Path.Combine(Application.persistentDataPath, jsonFileName);
+    //private static string path = Application.dataPath + "/" + jsonFileName;
 
     public static void AddHighScoreToJSON(int score)
     {
