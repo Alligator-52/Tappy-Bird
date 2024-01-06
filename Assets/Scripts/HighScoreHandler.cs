@@ -70,4 +70,14 @@ public static class HighScoreHandler
         List<int> highscores = LoadHighScores();
         return highscores;
     }
+
+    public static void DeleteScores() 
+    {
+        if (!File.Exists(path))
+        {
+            Debug.Log("Nothing to reset");
+            return;
+        }
+        File.Delete(path);
+    }
 }

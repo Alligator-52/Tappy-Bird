@@ -1,10 +1,10 @@
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header ("Texts")]
+    /*[Header ("Texts")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private TextMeshProUGUI titleHsText;
@@ -18,37 +18,36 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject screenButtonPanel;
 
     [Header("Audio")]
-    public AudioSource uiSound;
-
+    public AudioSource uiSound;*/
+    [SerializeField] public UIHandler uiHandler;
     private int score = 0;
+    public int Score {get { return score; } private set { } }
+
     private int highScore = 0;
+    public int HighScore { get { return highScore; } private set { } }
     private void Start()
     {
         Time.timeScale = 0f;
         score = 0;
-        scoreText.text = score.ToString();
-        PlayerPrefs.SetInt("Score", score);
-        highScore = PlayerPrefs.GetInt("HighScore");
-        highScoreText.text = titleHsText.text = "HighScore: " + highScore.ToString();
-        gameOverPanel.SetActive(false);
-        uiPanel.SetActive(false);
-        menuPanel.SetActive(true);
-        screenButtonPanel.SetActive(true);
-        hsPanel.SetActive(false);
+        //PlayerPrefs.SetInt("Score", score);
+        List<int> highscores = HighScoreHandler.DisplayHighScore();
+        //highScore = PlayerPrefs.GetInt("HighScore");
+        highScore = (highscores.Count > 0 ? highscores[0] : 0);
+       
         //Debug.Log(Application.dataPath);
     }
     public void ScoreCounter()
     {
         score += 1;
-        PlayerPrefs.SetInt("Score", score);
-        scoreText.text = score.ToString();
+        //PlayerPrefs.SetInt("Score", score);
+        uiHandler.scoreText.text = score.ToString();
         if(score > highScore)
         {
-            PlayerPrefs.SetInt("HighScore", score);
+            //PlayerPrefs.SetInt("HighScore", score);
             highScore = score;
-            hsPanel.SetActive(true);
+            uiHandler.hsPanel.SetActive(true);
         }
-        highScoreText.text = "HighScore: " + highScore.ToString();
+        uiHandler.highScoreText.text = "HighScore: " + highScore.ToString();
 
     }
 
@@ -56,26 +55,27 @@ public class GameManager : MonoBehaviour
     {
 
         Time.timeScale = 0f;
-        gameOverPanel.SetActive(true);
+        uiHandler.gameOverPanel.SetActive(true);
         HighScoreHandler.AddHighScoreToJSON(score);
-        goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
+        uiHandler.goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
        
     }
 
     public void StartGame()
     {
         Time.timeScale = 1f;
-        uiSound.Play();
-        uiPanel.SetActive(true);
-        menuPanel.SetActive(false);
-        screenButtonPanel.SetActive(false);
+        uiHandler.uiSound.Play();
+        uiHandler.uiPanel.SetActive(true);
+        uiHandler.menuPanel.SetActive(false);
+        uiHandler.screenButtonPanel.SetActive(false);
     }
 
     public void ResetScore()
     {
-        PlayerPrefs.DeleteKey("HighScore");
+        //PlayerPrefs.DeleteKey("HighScore");
+        HighScoreHandler.DeleteScores();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        uiSound.Play();
+        uiHandler.uiSound.Play();
     }
 }
 
