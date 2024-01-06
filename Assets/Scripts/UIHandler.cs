@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIHandler : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class UIHandler : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button leaderboardButton;
     [SerializeField] private Button leaderboardCloseButton;
+    [SerializeField] private Button resetScoreButton;
   
     
     [Header("UI Texts")]
@@ -50,15 +52,9 @@ public class UIHandler : MonoBehaviour
         noScoresText.gameObject.SetActive(false);
         leaderboardPanel.SetActive(false);
         leaderboardButton.onClick.AddListener(OnLeaderBoardButton);
-        leaderboardCloseButton.onClick.AddListener(() =>
-        {
-            leaderboardPanel.SetActive(false);
-            Debug.Log("Elements destroyed!");
-            foreach (Transform child in highscoreHolder)
-            {
-                Destroy(child.gameObject);
-            }
-        });
+        leaderboardCloseButton.onClick.AddListener(OnCloseButtonClicked);
+        resetScoreButton.onClick.AddListener(ResetScore);
+        
 
     }
 
@@ -66,6 +62,7 @@ public class UIHandler : MonoBehaviour
     {
         leaderboardButton.onClick.RemoveAllListeners();
         leaderboardCloseButton.onClick.RemoveAllListeners();
+        resetScoreButton.onClick.RemoveAllListeners();
     }
 
     private void OnLeaderBoardButton()
@@ -88,5 +85,22 @@ public class UIHandler : MonoBehaviour
             hsElemenText.text = $"{i+1}. {highscores[i]}";
         }
 
+    }
+
+    public void OnCloseButtonClicked()
+    {
+        leaderboardPanel.SetActive(false);
+        Debug.Log("Elements destroyed!");
+        foreach (Transform child in highscoreHolder)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    public void ResetScore()
+    {
+        //PlayerPrefs.DeleteKey("HighScore");
+        HighScoreHandler.DeleteScores();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        uiSound.Play();
     }
 }

@@ -1,24 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    /*[Header ("Texts")]
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI highScoreText;
-    [SerializeField] private TextMeshProUGUI titleHsText;
-    [SerializeField] private TextMeshProUGUI goScore;
-
-    [Header("Panels")]
-    [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject uiPanel;
-    [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject hsPanel;
-    [SerializeField] private GameObject screenButtonPanel;
-
-    [Header("Audio")]
-    public AudioSource uiSound;*/
     [SerializeField] public UIHandler uiHandler;
     private int score = 0;
     public int Score {get { return score; } private set { } }
@@ -33,13 +17,11 @@ public class GameManager : MonoBehaviour
         List<int> highscores = HighScoreHandler.DisplayHighScore();
         //highScore = PlayerPrefs.GetInt("HighScore");
         highScore = (highscores.Count > 0 ? highscores[0] : 0);
-       
-        //Debug.Log(Application.dataPath);
     }
     public void ScoreCounter()
     {
         score += 1;
-        //PlayerPrefs.SetInt("Score", score);
+        PlayerPrefs.SetInt("Score", score);
         uiHandler.scoreText.text = score.ToString();
         if(score > highScore)
         {
@@ -57,7 +39,8 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         uiHandler.gameOverPanel.SetActive(true);
         HighScoreHandler.AddHighScoreToJSON(score);
-        uiHandler.goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
+        //uiHandler.goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
+        uiHandler.goScore.text = "Score : " + score;
        
     }
 
@@ -70,13 +53,7 @@ public class GameManager : MonoBehaviour
         uiHandler.screenButtonPanel.SetActive(false);
     }
 
-    public void ResetScore()
-    {
-        //PlayerPrefs.DeleteKey("HighScore");
-        HighScoreHandler.DeleteScores();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        uiHandler.uiSound.Play();
-    }
+    
 }
 
 
