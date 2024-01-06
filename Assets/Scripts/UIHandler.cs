@@ -16,7 +16,7 @@ public class UIHandler : MonoBehaviour
   
     
     [Header("UI Texts")]
-    //[SerializeField] private TextMeshProUGUI scoreText;
+    
     [SerializeField] private TextMeshProUGUI noScoresText;
 
     [Header("UI Panels")]
@@ -28,15 +28,15 @@ public class UIHandler : MonoBehaviour
         noScoresText.gameObject.SetActive(false);
         leaderboardPanel.SetActive(false);
         leaderboardButton.onClick.AddListener(OnLeaderBoardButton);
-        leaderboardCloseButton.onClick.AddListener(() => 
+        leaderboardCloseButton.onClick.AddListener(() =>
         {
             leaderboardPanel.SetActive(false);
             Debug.Log("Elements destroyed!");
-            foreach(Transform child in highscoreHolder)
+            foreach (Transform child in highscoreHolder)
             {
                 Destroy(child.gameObject);
             }
-        }); 
+        });
 
     }
 
@@ -48,15 +48,16 @@ public class UIHandler : MonoBehaviour
 
     private void OnLeaderBoardButton()
     {
-        leaderboardPanel.SetActive(true);
         List<int> highscores = HighScoreHandler.DisplayHighScore();
         if(highscores.Count == 0 || highscores == null) 
         {
             noScoresText.gameObject.SetActive(true);
+            Debug.Log("We are in the no scores region");
             return;
         }
-
+        Debug.Log("Button clicked, we have reached here");
         noScoresText.gameObject.SetActive(false);
+        leaderboardPanel.SetActive(true);
         for(int i = 0; i < highscores.Count; i++)
         {
             var hsElement = Instantiate(highscoreElement, highscoreHolder);
