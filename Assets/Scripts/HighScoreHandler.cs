@@ -24,9 +24,9 @@ public static class HighScoreHandler
     public static void AddHighScoreToJSON(int score)
     {
         List<int> highScores = LoadHighScores();
-        if (highScores.Contains(score))
+        if (highScores.Contains(score) || score == 0)
         {
-            Debug.Log("This score already exists");
+            //Debug.Log("This score already exists");
             return;
         }
         highScores.Add(score);
@@ -81,3 +81,5 @@ public static class HighScoreHandler
         File.Delete(path);
     }
 }
+
+
