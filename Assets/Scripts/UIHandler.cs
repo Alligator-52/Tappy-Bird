@@ -55,8 +55,15 @@ public class UIHandler : MonoBehaviour
         leaderboardButton.onClick.AddListener(OnLeaderBoardButton);
         leaderboardCloseButton.onClick.AddListener(OnCloseButtonClicked);
         resetScoreButton.onClick.AddListener(ResetScore);
-        Debug.Log($"Count : {HighScoreHandler.DisplayHighScore().Count}");
-        if(HighScoreHandler.DisplayHighScore().Count != 0 && HighScoreHandler.DisplayHighScore() != null)
+        LoadHighscoreElements();
+        
+
+
+    }
+
+    private void LoadHighscoreElements()
+    {
+        if (HighScoreHandler.DisplayHighScore().Count != 0 && HighScoreHandler.DisplayHighScore() != null)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -69,9 +76,6 @@ public class UIHandler : MonoBehaviour
                 hsElementScore.text = "";
             }
         }
-        
-
-
     }
 
     private void OnDisable()
@@ -110,11 +114,11 @@ public class UIHandler : MonoBehaviour
     public void OnCloseButtonClicked()
     {
         leaderboardPanel.SetActive(false);
-        Debug.Log("Elements destroyed!");
+        /*Debug.Log("Elements destroyed!");
         foreach (Transform child in highscoreHolder)
         {
             Destroy(child.gameObject);
-        }
+        }*/
     }
     public void ResetScore()
     {
