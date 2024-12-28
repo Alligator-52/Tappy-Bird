@@ -40,11 +40,11 @@ public class PlayerMove : MonoBehaviour
     {
         if(isPressed)
         {
-            player.velocity = Vector2.up * upForce;
+            player.linearVelocity = Vector2.up * upForce;
             tapSound.Play();
             isPressed = false;
         }
-        var localVel = transform.InverseTransformDirection(player.velocity);
+        var localVel = transform.InverseTransformDirection(player.linearVelocity);
         if(localVel.y > 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 30);

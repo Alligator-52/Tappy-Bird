@@ -13,9 +13,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         score = 0;
-        //PlayerPrefs.SetInt("Score", score);
         List<int> highscores = HighScoreHandler.DisplayHighScore();
-        //highScore = PlayerPrefs.GetInt("HighScore");
         highScore = (highscores.Count > 0 ? highscores[0] : 0);
     }
     public void ScoreCounter()
@@ -25,7 +23,6 @@ public class GameManager : MonoBehaviour
         uiHandler.scoreText.text = score.ToString();
         if(score > highScore)
         {
-            //PlayerPrefs.SetInt("HighScore", score);
             highScore = score;
             uiHandler.hsPanel.SetActive(true);
         }
@@ -39,7 +36,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         uiHandler.gameOverPanel.SetActive(true);
         HighScoreHandler.AddHighScoreToJSON(score);
-        //uiHandler.goScore.text = "Score : " + PlayerPrefs.GetInt("Score");
         uiHandler.goScore.text = "Score : " + score;
        
     }
