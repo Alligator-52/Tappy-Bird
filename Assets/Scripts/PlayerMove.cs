@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Rigidbody2D player;
     [SerializeField] private float upForce = 100;
     [SerializeField] Animator playerAnimator;
+    //[SerializeField] private GameObject pausePanel;
     [Header("Audio")]
     public AudioSource tapSound;
     public AudioSource deathSound;
@@ -17,16 +20,24 @@ public class PlayerMove : MonoBehaviour
     [Header("Ads")]
     [SerializeField] private InterstitialAd interstitialAd;
 
+    private GameManager gameManager;
+
     [HideInInspector]
     public int deathCount = 0;
     private void Start()
     {
         deathCount = PlayerPrefs.GetInt("DeathCount");
+        gameManager = FindFirstObjectByType<GameManager>();
         //Debug.Log(deathCount);
     }
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (gameManager.GameState != Support.PlayState.Playing) return;
+        if ((IsPointerOverPauseButton()))
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             isPressed = true;
         }
@@ -36,6 +47,29 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private bool IsPointerOverPauseButton()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+            foreach (var result in raycastResults)
+            {
+                if (result.gameObject.CompareTag("pause"))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
     private void FixedUpdate()
     {
         if(isPressed)
@@ -60,7 +94,7 @@ public class PlayerMove : MonoBehaviour
         {
             //Debug.Log("Score!");
             scoreSound.Play();
-            FindObjectOfType<GameManager>().ScoreCounter();
+            gameManager.CountScore();
         }
     }
     public void OnCollisionEnter2D(Collision2D collision)
@@ -79,7 +113,7 @@ public class PlayerMove : MonoBehaviour
             //Debug.Log("Die!");
             playerAnimator.SetBool("isDead", true);
             deathSound.Play();
-            FindObjectOfType<GameManager>().GameOver();
+            gameManager.GameOver();
 
         }
     }

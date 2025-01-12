@@ -7,7 +7,7 @@ public class SceneManagement : MonoBehaviour
     public void ReloadGame()
     {
         uiSound.Play();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
     }
 
     public void QuitGame()

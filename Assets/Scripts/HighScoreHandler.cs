@@ -65,7 +65,7 @@ public static class HighScoreHandler
         File.WriteAllText(path, json);
     }
 
-    public static List<int> DisplayHighScore()
+    public static List<int> GEtHighScores()
     {
         List<int> highscores = LoadHighScores();
         return highscores;
